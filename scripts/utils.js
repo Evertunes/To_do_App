@@ -86,20 +86,26 @@ function infoTarefas() {
 }
 
 
-function remover(elementoID) {
-    let Id = JSON.parse(sessionStorage.dadosTarefas);
-    elementoID.forEach(task => {
-      task.children.length.children.length.onclick = event => {
-          fetch(urlTodoGet + '/tasks/' + task.id, {
-              method: 'DELETE',
-              headers: {
-                  Authorization: token,
-              },
-          }).then(response => {
-              infoTarefas();
-          });
-      };
-  })
+function remover() {
+  //   let Id = JSON.parse(sessionStorage.dadosTarefas);
+  //   elementoID.forEach(task => {
+  //     task.children.length.children.length.onclick = event => {
+  //         fetch(urlTodoGet + '/tasks/' + task.id, {
+  //             method: 'DELETE',
+  //             headers: {
+  //                 Authorization: token,
+  //             },
+  //         }).then(response => {
+  //             infoTarefas();
+  //         });
+  //     };
+  // })
+  let taref = document.getElementsByClassName(".tarefas-pendentes")
+  let el = document.getElementById('fora')
+  taref.Foreach(el.addEventListener('click', (i, e) => {
+    console.log(i + ' : ' + e);
+    el.remove();
+  }))
 
 }
   
@@ -113,12 +119,12 @@ function criaListaTarefasPendentes(tarefa) {
             svg = `<img src="https://img.icons8.com/material/24/000000/filled-trash.png"/>`
             if (tarefa.completed === false) {
     return `
-    <li class="tarefa">
-    <div class="${classNameDone}" id="${tarefa.id}"></div>
+    <li class="tarefa" id="fora">
+    <div class="${classNameDone}" id="${tarefa.id}" onclick="switchcompleted()"></div>
     <div class="descricao">
         <p class="nome">${tarefa.description}</p>
         <p class="timestamp"><i class="far fa-calendar-alt"></i> ${formatDate}</p>
-        <button id="mybutton">${svg}</button>
+        <button id="mybutton" onclick="remover()">${svg}</button>
     </div>
 </li>
 `;
