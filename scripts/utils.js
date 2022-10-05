@@ -84,8 +84,27 @@ function infoTarefas() {
       console.log(erro);
     });
 }
-//tentar converter o id da tarefa, pegar como base a função acima
+
+
 function remover(tarefa) {
+
+    let Id = JSON.parse(sessionStorage.getItem("dadosTarefas"));
+    
+    Id.forEach(rem => {
+
+      rem.children[1].children[1].onclick = event => {
+        fetch(urlTodoGet +'/tasks/'+rem.id, {
+            method: 'DELETE',
+            headers: {
+                Authorization: token,
+            },
+        }).then(response => {
+            infoTarefas();
+        });
+      }
+    })
+  } 
+  
   // fetch(`${urlTodoGet}/tasks`, {
   //   method: "GET",
   //   headers: {
@@ -96,8 +115,6 @@ function remover(tarefa) {
   // .then(response => {
   //   console.log(response)
   // })
-
-    }
 
 
 function criaListaTarefasPendentes(tarefa) {
