@@ -86,37 +86,16 @@ function infoTarefas() {
 }
 
 
-function remover(tarefa) {
-
-    let Id = JSON.parse(sessionStorage.getItem("dadosTarefas"));
-    
-    Id.forEach(rem => {
-
-      rem.children[1].children[1].onclick = event => {
-        fetch(urlTodoGet +'/tasks/'+rem.id, {
-            method: 'DELETE',
-            headers: {
-                Authorization: token,
-            },
-        }).then(response => {
-            infoTarefas();
-        });
-      }
-    })
-  } 
+function remover(elementoID) {
+  let button = document.querySelector("#mybutton");
   
-  // fetch(`${urlTodoGet}/tasks`, {
-  //   method: "GET",
-  //   headers: {
-  //     Authorization: `${sessionStorage.getItem("token")}`, // pega o token gerado e envia para API
-  //     "Content-Type": "application/json",
-  //   }
-  //   })
-  // .then(response => {
-  //   console.log(response)
-  // })
+  button.addEventListener("click", (e) => {
+    let Id = JSON.parse(sessionStorage.dadosTarefas);
+    Id.forEach(elementoID)
+  })
 
-
+}
+  
 function criaListaTarefasPendentes(tarefa) {
   let newTaks;
             const date = new Date(tarefa.createdAt),
@@ -132,7 +111,7 @@ function criaListaTarefasPendentes(tarefa) {
     <div class="descricao">
         <p class="nome">${tarefa.description}</p>
         <p class="timestamp"><i class="far fa-calendar-alt"></i> ${formatDate}</p>
-        <button onclick = "remover()">${svg}</button>
+        <button id="mybutton" onclick = "remover()">${svg}</button>
     </div>
 </li>
 `;
