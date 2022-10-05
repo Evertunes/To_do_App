@@ -90,24 +90,21 @@ function remover() {
   //   let Id = JSON.parse(sessionStorage.dadosTarefas);
   //   elementoID.forEach(task => {
   //     task.children.length.children.length.onclick = event => {
-  //         fetch(urlTodoGet + '/tasks/' + task.id, {
-  //             method: 'DELETE',
-  //             headers: {
-  //                 Authorization: token,
-  //             },
-  //         }).then(response => {
-  //             infoTarefas();
-  //         });
+  //         
   //     };
   // })
   let taref = document.getElementsByClassName(".tarefas-pendentes")
-  let el = document.getElementById('fora')
-  taref.Foreach(el.addEventListener('click', (i, e) => {
-    console.log(i + ' : ' + e);
-    el.remove();
-  }))
+  taskID = JSON.parse(sessionStorage.dadosTarefas)[0].id
+  fetch(urlTodoGet + '/tasks/' + taskID, {
+              method: 'DELETE',
+              headers: {
+                Authorization: `${sessionStorage.getItem("token")}`,
+              },
+          }).then(response => {
+              infoTarefas();
+          });
 
-}
+  }
   
 function criaListaTarefasPendentes(tarefa) {
   let newTaks;
