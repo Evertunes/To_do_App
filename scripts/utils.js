@@ -87,11 +87,18 @@ function infoTarefas() {
 
 
 function remover(elementoID) {
-  let button = document.querySelector("#mybutton");
-  
-  button.addEventListener("click", (e) => {
     let Id = JSON.parse(sessionStorage.dadosTarefas);
-    Id.forEach(elementoID)
+    elementoID.forEach(task => {
+      task.children.length.children.length.onclick = event => {
+          fetch(urlTodoGet + '/tasks/' + task.id, {
+              method: 'DELETE',
+              headers: {
+                  Authorization: token,
+              },
+          }).then(response => {
+              infoTarefas();
+          });
+      };
   })
 
 }
@@ -111,7 +118,7 @@ function criaListaTarefasPendentes(tarefa) {
     <div class="descricao">
         <p class="nome">${tarefa.description}</p>
         <p class="timestamp"><i class="far fa-calendar-alt"></i> ${formatDate}</p>
-        <button id="mybutton" onclick = "remover()">${svg}</button>
+        <button id="mybutton">${svg}</button>
     </div>
 </li>
 `;
