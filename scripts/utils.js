@@ -69,17 +69,25 @@ function infoTarefas() {
       console.log(data);
       sessionStorage.setItem("dadosTarefas", JSON.stringify(data));
       const tarefas = JSON.parse(sessionStorage.getItem("dadosTarefas"));
+
       const listaTarefasPendentes = data.map((tarefa) =>
         criaListaTarefasPendentes(tarefa)
       );
-      const listaTarefasConcluidas = data.map((tarefa) =>
-        criaListaTarefasConcluidas(tarefa)
-      );
-      document.getElementById("lista-tarefas").innerHTML =
+      const ListaTarefasTerminadas = data.map((tarefa) =>
+        criaListaTarefasTerminadas(tarefa));
+
+        let div = document.getElementsByTagName("div");
+        
+        if(div.classNameDone = "done"){
+          document.getElementById("tarefas-terminadas").innerHTML =
+          ListaTarefasTerminadas.join("");
+      }
+      else if(div.classNameDone = "not-done"){
+        document.getElementById("lista-tarefas").innerHTML =
         listaTarefasPendentes.join("");
-      document.getElementById("tarefas-terminadas").innerHTML =
-        listaTarefasConcluidas.join("");
-    })
+      }
+    }
+        )
     .catch(function (erro) {
       console.log(erro);
     });
@@ -112,45 +120,44 @@ function criaListaTarefasPendentes(tarefa) {
             month_num = Number(date.getUTCMonth()) + 1,
             month_decimal = month_num <= 9 ? '0' + month_num : month_num,
             formatDate = `${date.getUTCDate()}/${month_decimal}/${date.getUTCFullYear()}`,
-            classNameDone = !tarefa.completed ? 'not-done' : 'done'
-            svg = `<img src="https://img.icons8.com/material/24/000000/filled-trash.png"/>`
-            if (tarefa.completed === false) {
-    return `
+            classNameDone = (tarefa.completed === false) ? 'not-done' : 'done'
+            svg = `<img src="https://img.icons8.com/material/24/000000/filled-trash.png"/>`;
+     return      `
     <li class="tarefa" id="fora">
-    <div class="${classNameDone}" id="${tarefa.id}" onclick="switchcompleted()"></div>
+    <div class="${classNameDone}" id="${tarefa.id}" onclick = "change(this.id)"></div>
     <div class="descricao">
         <p class="nome">${tarefa.description}</p>
         <p class="timestamp"><i class="far fa-calendar-alt"></i> ${formatDate}</p>
-        <button id="mybutton" onclick="remover()">${svg}</button>
+        <button id="mybutton" onclick="remover(this.id)">${svg}</button> 
     </div>
 </li>
-`;
-  }
+` //usando o this.id como parametro da função voce remove apenas a tarefa clicada
 }
 
-function criaListaTarefasConcluidas(tarefa) {
-  if (tarefa.completed === true) {
-    return `
-    <li class="tarefa">
-    <div class="${classNameDone}"></div>
+function criaListaTarefasTerminadas(tarefa) {
+  let newTaks;
+            const date = new Date(tarefa.createdAt),
+            month_num = Number(date.getUTCMonth()) + 1,
+            month_decimal = month_num <= 9 ? '0' + month_num : month_num,
+            formatDate = `${date.getUTCDate()}/${month_decimal}/${date.getUTCFullYear()}`,
+            classNameDone = (tarefa.completed === false) ? 'not-done' : 'done'
+            svg = `<img src="https://img.icons8.com/material/24/000000/filled-trash.png"/>`;
+     return      `
+    <li class="tarefa" id="fora">
+    <div class="${classNameDone}" id="${tarefa.id}"></div>
     <div class="descricao">
-    <p class="nome">${tarefa.description}</p>
-    <p class="timestamp"><i class="far fa-calendar-alt"></i> ${formatDate}</p>
-        <button><i><id="${tarefa.id}" class="fas fa-undo-alt change"></i></button>
-        <button><i><id="${tarefa.id}" class="far fa-trash-alt"></i></button>
-    </div>
+        <p class="nome">${tarefa.description}</p>
+        <p class="timestamp"><i class="far fa-calendar-alt"></i> ${formatDate}</p>
+        <button id="mybuttonnotDone" onclick="remover(this.id)">${svg}</button>
     </div>
 </li>
 `;
   }
-}
-
 
 function criarTarefa(event) {
   event.preventDefault();
   let nomeTarefa = document.getElementById("nova-Tarefa").value;
   inputTarefa.value = inputTarefa.value.trim();
-  
   fetch(`${urlTodoGet}/tasks`, {
     method: "POST",
     headers: {
@@ -159,7 +166,7 @@ function criarTarefa(event) {
     },
     body: JSON.stringify({ //converte o body que necessita ser enviado para API
       description: nomeTarefa,
-      completed: false,
+      completed: true,
     }),
   })
     .then(function (response) {
@@ -169,32 +176,18 @@ function criarTarefa(event) {
       console.log(data);
       infoTarefas(); //exibe a tarefa recem criada
       formTarefas.reset();
-    })
+        })
     .catch(function (erro) {
       console.log(erro);
     });
 }
 
-function switchcompleted(tasks) {
-  tasks.forEach(task => {
-      task.children[0].onclick = event => {
-          const status = event.target.classList[0] == 'done' ? false : true;
-          const data = {
-              completed: status,
-          };
-
-          fetch(urlTodoGet + '/tasks/' + task.id, {
-              method: 'PUT',
-              body: JSON.stringify(data),
-              headers: {
-                  Authorization: token,
-                  'Content-type': 'application/json',
-              },
-          })
-              .then(response => {
-                  infoTarefas();
-              })
-              .catch(error => console.log(error));
-      };
-  });
-}
+function change() {
+let form = document.forms["formtarefa"];
+let divs = form.querySelector('.not-done');
+ if(divs.classList.contains('not-done')){
+  divs.classList.remove('not-done');
+  divs.classList.add('done');
+  sessionStorage.setItem("estado", divs.classList);}
+ }
+ 
